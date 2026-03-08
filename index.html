@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Nosso Contador de Amor</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Nosso Contador de Amor <span class="coracao">❤</span></h1>
+
+        <div class="counter" id="loveCounter">
+            <div>Estamos juntos há:</div>
+            <div class="time-unit">
+                <div class="time-value" id="daysTogether">0</div>
+                <div>dias</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="hoursTogether">0</div>
+                <div>horas</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="minutesTogether">0</div>
+                <div>minutos</div>
+            </div>
+            <div class="time-unit">
+                <div class="time-value" id="secondsTogether">0</div>
+                <div>segundos</div>
+            </div>
+        </div>
+
+        <div class="carousel">
+            <div class="carousel-inner" id="carouselInner">
+                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.38.58_8d786ad7.jpg" alt="Foto 1"></div>
+                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.42.20_6543e72b.jpg" alt="Foto 2"></div>
+                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.45.14_7f9b9c03.jpg" alt="Foto 3"></div>
+                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.45.14_c1f7fbc9.jpg" alt="Foto 4"></div>
+            </div>
+            <button class="carousel-control prev">❮</button>
+            <button class="carousel-control next">❯</button>
+        </div>
+
+        <div class="music-player">
+            <h3>Nossa Música <span class="heart">🎵</span></h3>
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/2uP6t2J5MEwhr9rDkAAzwh?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
