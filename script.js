@@ -1,115 +1,117 @@
-// Contador
-const startDate = new Date('2025-05-12');
-const daysElement = document.getElementById('daysTogether');
-const hoursElement = document.getElementById('hoursTogether');
-const minutesElement = document.getElementById('minutesTogether');
-const secondsElement = document.getElementById('secondsTogether');
+// Contador de amor
+const startDate = new Date('2025-05-12T00:00:00');
+const els = {
+    days:    document.getElementById('daysTogether'),
+    hours:   document.getElementById('hoursTogether'),
+    minutes: document.getElementById('minutesTogether'),
+    seconds: document.getElementById('secondsTogether'),
+};
 
-function updateLoveCounter() {
-    const now = new Date();
-    const diff = now - startDate;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    daysElement.textContent = days;
-    hoursElement.textContent = hours;
-    minutesElement.textContent = minutes;
-    secondsElement.textContent = seconds;
+function pad(n) {
+    return String(n).padStart(2, '0');
 }
 
+function pop(el) {
+    el.classList.remove('pop');
+    void el.offsetWidth;
+    el.classList.add('pop');
+    el.addEventListener('animationend', () => el.classList.remove('pop'), { once: true });
+}
 
-// Carrossel melhorado
+let prevSeconds = -1;
+
+function updateCounter() {
+    const diff = Date.now() - startDate.getTime();
+    const days    = Math.floor(diff / 86400000);
+    const hours   = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    els.days.textContent    = days;
+    els.hours.textContent   = pad(hours);
+    els.minutes.textContent = pad(minutes);
+    els.seconds.textContent = pad(seconds);
+
+    if (seconds !== prevSeconds) {
+        pop(els.seconds);
+        if (seconds === 0) pop(els.minutes);
+        if (seconds === 0 && minutes === 0) pop(els.hours);
+        if (seconds === 0 && minutes === 0 && hours === 0) pop(els.days);
+        prevSeconds = seconds;
+    }
+}
+
+// Carrossel
 const carouselInner = document.getElementById('carouselInner');
-const prevBtn = document.querySelector('.prev');
-const nextBtn = document.querySelector('.next');
-const carouselItems = carouselInner.children;
-let currentIndex = 0;
+const dotsContainer = document.getElementById('carouselDots');
+const items = carouselInner.children;
+let current = 0;
+let autoTimer = null;
 let touchStartX = 0;
-let touchEndX = 0;
 
-// Criar indicadores
-const indicatorsContainer = document.createElement('div');
-indicatorsContainer.className = 'carousel-indicators';
-document.querySelector('.carousel').appendChild(indicatorsContainer);
+// Criar dots
+Array.from(items).forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Foto ${i + 1}`);
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+});
 
-for (let i = 0; i < carouselItems.length; i++) {
-    const indicator = document.createElement('div');
-    indicator.className = 'carousel-indicator';
-    if (i === 0) indicator.classList.add('active');
-    indicator.addEventListener('click', () => goToSlide(i));
-    indicatorsContainer.appendChild(indicator);
-}
-
-function updateCarousel() {
-    carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
-    updateIndicators();
-}
-
-function updateIndicators() {
-    const indicators = document.querySelectorAll('.carousel-indicator');
-    indicators.forEach((indicator, index) => {
-        indicator.classList.toggle('active', index === currentIndex);
+function updateDots() {
+    dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
     });
 }
 
-function goToSlide(index) {
-    currentIndex = index;
-    updateCarousel();
+function goTo(index) {
+    current = (index + items.length) % items.length;
+    carouselInner.style.transform = `translateX(-${current * 100}%)`;
+    updateDots();
 }
 
-function nextSlide() {
-    currentIndex = (currentIndex < carouselItems.length - 1) ? currentIndex + 1 : 0;
-    updateCarousel();
-}
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
 
-function prevSlide() {
-    currentIndex = (currentIndex > 0) ? currentIndex - 1 : carouselItems.length - 1;
-    updateCarousel();
-}
+document.querySelector('.prev').addEventListener('click', () => { resetAuto(); prev(); });
+document.querySelector('.next').addEventListener('click', () => { resetAuto(); next(); });
 
-// Event listeners
-prevBtn.addEventListener('click', prevSlide);
-nextBtn.addEventListener('click', nextSlide);
-
-// Navegação por touch
-carouselInner.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
+carouselInner.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+carouselInner.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(dx) > 50) { resetAuto(); dx < 0 ? next() : prev(); }
 });
 
-carouselInner.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
+function startAuto() { autoTimer = setInterval(next, 5000); }
+function resetAuto() { clearInterval(autoTimer); startAuto(); }
 
-function handleSwipe() {
-    if (touchEndX < touchStartX - 50) nextSlide(); // Swipe para esquerda
-    if (touchEndX > touchStartX + 50) prevSlide(); // Swipe para direita
+const carousel = document.querySelector('.carousel');
+carousel.addEventListener('mouseenter', () => clearInterval(autoTimer));
+carousel.addEventListener('mouseleave', startAuto);
+
+// Partículas flutuantes
+const EMOJIS = ['❤️', '💕', '💖', '💗', '💓', '🌸', '✨'];
+const particlesEl = document.getElementById('particles');
+const MAX_PARTICLES = 15;
+
+function spawnParticle() {
+    if (particlesEl.children.length >= MAX_PARTICLES) return;
+    const el = document.createElement('span');
+    el.className = 'particle';
+    el.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+    const dur = 4 + Math.random() * 4;
+    el.style.setProperty('--dur', dur + 's');
+    el.style.setProperty('--delay', '0s');
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.bottom = '-40px';
+    el.style.fontSize = (0.9 + Math.random() * 0.8) + 'rem';
+    particlesEl.appendChild(el);
+    setTimeout(() => el.remove(), dur * 1000);
 }
 
-// Auto-rotacionar (opcional)
-let autoSlideInterval = setInterval(nextSlide, 5000);
-
-// Pausar auto-rotacionar quando interagir
-carouselInner.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
-carouselInner.addEventListener('mouseleave', () => {
-    autoSlideInterval = setInterval(nextSlide, 5000);
-});
-
-// Iniciar
-window.onload = function () {
-    updateLoveCounter();
-    setInterval(updateLoveCounter, 1000);
-    updateCarousel();
-};
-
-const heartCreate = () =>{
-    const heart = document.createElement('div');
-    heart.classList.add('heart');
-    heart.innerText = "💜";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = Math.random() * 2+3+"s";
-    document.body.appendChild(heart);
-
-}
-setInterval(heartCreate,300);
+// Init
+updateCounter();
+setInterval(updateCounter, 1000);
+goTo(0);
+startAuto();
+setInterval(spawnParticle, 600);

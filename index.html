@@ -4,46 +4,79 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Nosso Contador de Amor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+    <div class="particles" id="particles"></div>
+
     <div class="container">
-        <h1>Nosso Contador de Amor <span class="coracao">❤</span></h1>
 
-        <div class="counter" id="loveCounter">
-            <div>Estamos juntos há:</div>
-            <div class="time-unit">
-                <div class="time-value" id="daysTogether">0</div>
-                <div>dias</div>
-            </div>
-            <div class="time-unit">
-                <div class="time-value" id="hoursTogether">0</div>
-                <div>horas</div>
-            </div>
-            <div class="time-unit">
-                <div class="time-value" id="minutesTogether">0</div>
-                <div>minutos</div>
-            </div>
-            <div class="time-unit">
-                <div class="time-value" id="secondsTogether">0</div>
-                <div>segundos</div>
-            </div>
-        </div>
+        <header class="hero">
+            <div class="hero-badge">💕 Desde 12 de Maio de 2025</div>
+            <h1>Nosso Contador<br><span class="accent">de Amor</span></h1>
+        </header>
 
-        <div class="carousel">
-            <div class="carousel-inner" id="carouselInner">
-                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.38.58_8d786ad7.jpg" alt="Foto 1"></div>
-                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.42.20_6543e72b.jpg" alt="Foto 2"></div>
-                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.45.14_7f9b9c03.jpg" alt="Foto 3"></div>
-                <div class="carousel-item"><img src="imagens/WhatsApp Image 2025-06-12 at 11.45.14_c1f7fbc9.jpg" alt="Foto 4"></div>
+        <section class="glass-card counter-section">
+            <p class="counter-label">Estamos juntos há</p>
+            <div class="counter-grid">
+                <div class="time-block">
+                    <span class="time-value" id="daysTogether">0</span>
+                    <span class="time-label">dias</span>
+                </div>
+                <div class="time-divider">:</div>
+                <div class="time-block">
+                    <span class="time-value" id="hoursTogether">0</span>
+                    <span class="time-label">horas</span>
+                </div>
+                <div class="time-divider">:</div>
+                <div class="time-block">
+                    <span class="time-value" id="minutesTogether">0</span>
+                    <span class="time-label">minutos</span>
+                </div>
+                <div class="time-divider">:</div>
+                <div class="time-block">
+                    <span class="time-value" id="secondsTogether">0</span>
+                    <span class="time-label">segundos</span>
+                </div>
             </div>
-            <button class="carousel-control prev">❮</button>
-            <button class="carousel-control next">❯</button>
-        </div>
+        </section>
 
-        <div class="music-player">
-            <h3>Nossa Música <span class="heart">🎵</span></h3>
-            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/2uP6t2J5MEwhr9rDkAAzwh?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>        </div>
+        <section class="glass-card carousel-section">
+            <h2 class="section-title">Nossas Memórias 📸</h2>
+            <div class="carousel">
+                <div class="carousel-inner" id="carouselInner">
+                    <div class="carousel-item"><img src="imagens/whatsapp image 2025-06-12 at 11.38.58_8d786ad7.jpg" alt="Foto 1" loading="lazy"></div>
+                    <div class="carousel-item"><img src="imagens/whatsapp image 2025-06-12 at 11.42.20_6543e72b.jpg" alt="Foto 2" loading="lazy"></div>
+                    <div class="carousel-item"><img src="imagens/whatsapp image 2025-06-12 at 11.45.14_7f9b9c03.jpg" alt="Foto 3" loading="lazy"></div>
+                    <div class="carousel-item"><img src="imagens/whatsapp image 2025-06-12 at 11.45.14_c1f7fbc9.jpg" alt="Foto 4" loading="lazy"></div>
+                </div>
+                <button class="carousel-btn prev" aria-label="Foto anterior">&#10094;</button>
+                <button class="carousel-btn next" aria-label="Próxima foto">&#10095;</button>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </section>
+
+        <section class="glass-card music-section">
+            <h2 class="section-title">Nossa Música 🎵</h2>
+            <iframe
+                style="border-radius:16px; border:none"
+                src="https://open.spotify.com/embed/track/2uP6t2J5MEwhr9rDkAAzwh?utm_source=generator&theme=0"
+                width="100%"
+                height="152"
+                allowfullscreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy">
+            </iframe>
+        </section>
+
+        <footer class="footer">
+            Feito com <span class="footer-heart">❤️</span> para você
+        </footer>
+
     </div>
 
     <script src="script.js"></script>
