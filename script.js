@@ -49,15 +49,6 @@ let current = 0;
 let autoTimer = null;
 let touchStartX = 0;
 
-// Criar dots
-Array.from(items).forEach((_, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', `Foto ${i + 1}`);
-    dot.addEventListener('click', () => goTo(i));
-    dotsContainer.appendChild(dot);
-});
-
 function updateDots() {
     dotsContainer.querySelectorAll('.dot').forEach((d, i) => {
         d.classList.toggle('active', i === current);
@@ -65,8 +56,10 @@ function updateDots() {
 }
 
 function goTo(index) {
-    current = (index + items.length) % items.length;
-    carouselInner.style.transform = `translateX(-${current * 100}%)`;
+    if (!items.length) return;
+    items[current]?.classList.remove('active');
+    current = ((index % items.length) + items.length) % items.length;
+    items[current].classList.add('active');
     updateDots();
 }
 
@@ -109,9 +102,34 @@ function spawnParticle() {
     setTimeout(() => el.remove(), dur * 1000);
 }
 
+async function loadCarousel() {
+    const response = await fetch('imagens/manifest.json');
+    const files = await response.json();
+
+    files.forEach((filename, i) => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+
+        const img = document.createElement('img');
+        img.src = 'imagens/' + encodeURIComponent(filename);
+        img.alt = `Foto ${i + 1}`;
+        img.loading = 'lazy';
+        item.appendChild(img);
+        carouselInner.appendChild(item);
+
+        const dot = document.createElement('button');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', `Foto ${i + 1}`);
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+    });
+
+    goTo(0);
+    startAuto();
+}
+
 // Init
 updateCounter();
 setInterval(updateCounter, 1000);
-goTo(0);
-startAuto();
+loadCarousel();
 setInterval(spawnParticle, 600);

@@ -1,0 +1,30 @@
+name: Atualizar manifest de imagens
+
+on:
+  push:
+    paths:
+      - 'imagens/**'
+
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Gerar manifest.json
+        run: |
+          python3 -c "
+          import os, json
+          files = sorted([f for f in os.listdir('imagens') if f.lower().endswith(('.jpg','.jpeg','.png','.gif','.webp'))])
+          with open('imagens/manifest.json', 'w', encoding='utf-8') as out:
+              json.dump(files, out, ensure_ascii=False, indent=2)
+          print('Gerado com', len(files), 'imagens')
+          "
+
+      - name: Commit manifest atualizado
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: atualizar manifest de imagens"
+          file_pattern: imagens/manifest.json
